@@ -29,29 +29,6 @@ io.on('connection', function(socket) {
   socket.on('chat message', function(msg) {
     io.emit('chat message', msg);
 
-    var OAuth = require('oauth');
-
-    var oauth = new OAuth.OAuth(
-      'https://api.twitter.com/oauth/request_token',
-      'https://api.twitter.com/oauth/access_token',
-      process.env.oauth1,
-      process.env.oauth2,
-      '1.0A',
-      null,
-      'HMAC-SHA1'
-    );
-    oauth.get(
-      'https://api.twitter.com/1.1/search/tweets.json?q=' + msg + "&count=10",
-      process.env.oauth3,
-      process.env.oauth4,
-      function(e, data, res) {
-        console.log("twitter api call complete")
-        if (e) console.error(e);
-        data = JSON.parse(data)
-        for (var i in data["statuses"]) {
-          io.emit('chat message', data["statuses"][i]["text"]);
-        }
-      });
   });
   //send a message on disconnect
   socket.on('disconnect', function(socket) {
